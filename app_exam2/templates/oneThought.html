@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oneThought</title>
+    <style>
+        .links{
+            display: inline-block;
+            width: fit-content;
+            margin-left: 1200px;
+        }
+
+        .like{
+            background-color: limegreen;
+            color: linen;
+        }
+        .unlike{
+            background-color: yellow;
+            color: gray;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="links">
+        <a href="/thoughts">Dashboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <p> {{thought.uploaded_by.firstname}} says: {{thought.thought_text}}</p>
+
+        
+    
+    {% if user in thought.users_who_like.all %}
+            <form action="/unlike/{{thought.id}}" method="POST">
+                {% csrf_token %}
+                <input class="unlike" type="submit" value="Un-Like">
+            </form>
+        {% else %}
+            <form action="/make/{{thought.id}}"method="POST">
+                {% csrf_token %}
+                <input class="like" type="submit" value="Like">
+
+            </form>
+            <!-- <a href="/make/{{book.id}}">Add to Favorites</a> -->
+    {% endif %}
+
+        <p>People who liked this thought:</p>
+        <table>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </tr>
+        {% for user_that_has_liked in thought.users_who_like.all %}
+            {% if user_that_has_liked != thought.uploaded_by %}
+            <tr>
+                <td>{{user_that_has_liked.firstname}}</td>
+                <td>{{user_that_has_liked.lastname}}</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        {% if thought.uploaded_by in thought.users_who_like.all %}
+                <tr>
+                    <td>{{thought.uploaded_by.firstname}}</td>
+                    <td>{{thought.uploaded_by.lastname}}</td>
+                </tr>
+        {% endif %}
+        </table>
+        
+</body>
+</html>
+
+

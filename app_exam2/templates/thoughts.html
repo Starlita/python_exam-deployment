@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thoughts</title>
+    <style>
+        .thoughts{
+            border: 1px solid black;
+            width: fit-content;
+            padding: 20px;
+        }
+
+        .links{
+            display: inline-block;
+            width: fit-content;
+            margin-left: 1200px;
+        }
+        .delete{
+            background-color: crimson;
+            color: white;
+        }
+
+        .posts{
+            margin: 20px;
+            margin-bottom: 20px;
+            width:max-content;
+            border: 1px dotted gray;
+        }
+
+      
+       
+       
+
+
+    </style>
+</head>
+<body>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{message}} </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2>Hi {{user.firstname}}!</h2>
+    <div class="links">
+        <a href="/logout">Logout</a>
+    </div>
+    
+
+
+    <div class="thoughtform">
+        <form action='/add' method="POST">
+        {% csrf_token %}
+        <p><input type="text" name="thought_text" placeholder="Post a great thought here!"></p>
+        <input type="submit" style="background-color: blue; color:white;" value="Add Thought!">
+        </form>
+    </div>
+
+    <h2>Thoughts:</h2>
+    
+        {% for thought in all_thoughts %}
+        <div class="posts">
+            <p>{{thought.uploaded_by.firstname}} says: <p class="thoughts">{{thought.thought_text}}</p>
+            <a href="/onethought/{{thought.id}}">Details</a>
+            <p> {{thought.users_who_like.all.count}} people have liked this thought!</p>
+            {% if thought.uploaded_by == user %}
+                <button class="delete"><a href="/delete/{{thought.id}}">Delete</a></button>
+            {% endif %}
+        </div>
+        {% endfor %}
+   
+    
+
+
+
+</body>
+</html>
